@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import EventForm from './EventForm';
+import EventDetailsModal from './EventDetailsModal';
 
 const MyCalendar = () => {
   // const [value, onChange] = useState(new Date());
@@ -12,6 +13,7 @@ const MyCalendar = () => {
     return savedEvents ? JSON.parse(savedEvents) : {};
   });
   const [eventToEdit, setEventToEdit] = useState(null);
+  const [eventToView, setEventToView] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('events', JSON.stringify(events));
@@ -52,12 +54,17 @@ const MyCalendar = () => {
       ...prevEvents,
       [dateKey]: prevEvents[dateKey].filter((event) => event.id !== eventId),
     }));
+    setEventToView(null);
   };
 
-  const handleEditClick = (event) => {
-    setEventToEdit(event);
-    setIsPopupVisible(true);
+  const handleEventClick = (event) => {
+    setEventToView(event);
   };
+
+  // const handleEditClick = (event) => {
+  //   setEventToEdit(event);
+  //   setIsPopupVisible(true);
+  // };
 
   const renderTileContent = ({ date }) => {
     const dateKey = date.toDateString();
@@ -68,8 +75,11 @@ const MyCalendar = () => {
             key={event.id}
             style={{
               fontSize: '0.8em',
-              color: event.color,
+              color: '#000',
+              cursor: 'pointer',
+              textDecoration: 'underline',
             }}
+            onClick={() => handleEventClick(event)}
           >
             {event.title}
           </div>
@@ -78,30 +88,30 @@ const MyCalendar = () => {
     );
   };
 
-  const renderEventList = () => {
-    const dateKey = selectedDate?.toDateString();
-    const dayEvents = events[dateKey] || [];
+  // const renderEventList = () => {
+  //   const dateKey = selectedDate?.toDateString();
+  //   const dayEvents = events[dateKey] || [];
 
-    return (
-      <ul>
-        {dayEvents.map((event) => (
-          <li key={event.id} style={{ marginBottom: '8px' }}>
-            <span style={{ color: event.color }}>{event.title}</span>
-            <button onClick={() => handleEditClick(event)} style={buttonStyles.edit}>
-              Edit
-            </button>
-            <button onClick={() => deleteEvent(event.id)} style={buttonStyles.delete}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-    );
-  };
+  //   return (
+  //     <ul>
+  //       {dayEvents.map((event) => (
+  //         <li key={event.id} style={{ marginBottom: '10px' }}>
+  //           <span>{event.title}</span>
+  //           <button onClick={() => handleEditClick(event)} style={buttonStyles.edit}>
+  //             Edit
+  //           </button>
+  //           <button onClick={() => deleteEvent(event.id)} style={buttonStyles.delete}>
+  //             Delete
+  //           </button>
+  //         </li>
+  //       ))}
+  //     </ul>
+  //   );
+  // };
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Calendar with Events</h1>
+      <h1>React Calendar with Event Details</h1>
       <Calendar onClickDay={handleDayClick} tileContent={renderTileContent} />
       {isPopupVisible && (
         <EventForm
@@ -112,30 +122,41 @@ const MyCalendar = () => {
           onUpdateEvent={updateEvent}
         />
       )}
-      {selectedDate && renderEventList()}
+      {eventToView && (
+        <EventDetailsModal
+          event={eventToView}
+          onClose={() => setEventToView(null)}
+          onEdit={() => {
+            setEventToEdit(eventToView);
+            setIsPopupVisible(true);
+            setEventToView(null);
+          }}
+          onDelete={() => deleteEvent(eventToView.id)}
+        />
+      )}
     </div>
   );
 };
 
-const buttonStyles = {
-  edit: {
-    marginLeft: '10px',
-    padding: '5px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  },
-  delete: {
-    marginLeft: '5px',
-    padding: '5px',
-    backgroundColor: '#f44336',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  },
-};
+// const buttonStyles = {
+//   edit: {
+//     marginLeft: '10px',
+//     padding: '5px',
+//     backgroundColor: '#4CAF50',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '5px',
+//     cursor: 'pointer',
+//   },
+//   delete: {
+//     marginLeft: '5px',
+//     padding: '5px',
+//     backgroundColor: '#f44336',
+//     color: 'white',
+//     border: 'none',
+//     borderRadius: '5px',
+//     cursor: 'pointer',
+//   },
+// };
 
 export default MyCalendar;
