@@ -5,7 +5,6 @@ import EventForm from './EventForm';
 import EventDetailsModal from './EventDetailsModal';
 
 const MyCalendar = () => {
-  // const [value, onChange] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [events, setEvents] = useState(() => {
@@ -29,21 +28,21 @@ const MyCalendar = () => {
     setEventToEdit(null);
   };
 
-  const addEvent = (eventTitle) => {
+  const addEvent = (eventData) => {
     const dateKey = selectedDate.toDateString();
-    const newEvent = { id: Date.now(), title: eventTitle };
+    const newEvent = { id: Date.now(), title: eventData.title, color: eventData.color };
     setEvents((prevEvents) => ({
       ...prevEvents,
       [dateKey]: [...(prevEvents[dateKey] || []), newEvent],
     }));
   };
 
-  const updateEvent = (eventId, updatedTitle) => {
+  const updateEvent = (eventId, eventData) => {
     const dateKey = selectedDate.toDateString();
     setEvents((prevEvents) => ({
       ...prevEvents,
       [dateKey]: prevEvents[dateKey].map((event) =>
-        event.id === eventId ? { ...event, title: updatedTitle } : event
+        event.id === eventId ? { ...event, title: eventData.title, color: eventData.color } : event
       ),
     }));
   };
@@ -61,11 +60,6 @@ const MyCalendar = () => {
     setEventToView(event);
   };
 
-  // const handleEditClick = (event) => {
-  //   setEventToEdit(event);
-  //   setIsPopupVisible(true);
-  // };
-
   const renderTileContent = ({ date }) => {
     const dateKey = date.toDateString();
     return (
@@ -75,7 +69,8 @@ const MyCalendar = () => {
             key={event.id}
             style={{
               fontSize: '0.8em',
-              color: '#000',
+              background: event.color,
+              color: '#fff',
               cursor: 'pointer',
               textDecoration: 'underline',
             }}
@@ -87,27 +82,6 @@ const MyCalendar = () => {
       </div>
     );
   };
-
-  // const renderEventList = () => {
-  //   const dateKey = selectedDate?.toDateString();
-  //   const dayEvents = events[dateKey] || [];
-
-  //   return (
-  //     <ul>
-  //       {dayEvents.map((event) => (
-  //         <li key={event.id} style={{ marginBottom: '10px' }}>
-  //           <span>{event.title}</span>
-  //           <button onClick={() => handleEditClick(event)} style={buttonStyles.edit}>
-  //             Edit
-  //           </button>
-  //           <button onClick={() => deleteEvent(event.id)} style={buttonStyles.delete}>
-  //             Delete
-  //           </button>
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   );
-  // };
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
@@ -137,26 +111,5 @@ const MyCalendar = () => {
     </div>
   );
 };
-
-// const buttonStyles = {
-//   edit: {
-//     marginLeft: '10px',
-//     padding: '5px',
-//     backgroundColor: '#4CAF50',
-//     color: 'white',
-//     border: 'none',
-//     borderRadius: '5px',
-//     cursor: 'pointer',
-//   },
-//   delete: {
-//     marginLeft: '5px',
-//     padding: '5px',
-//     backgroundColor: '#f44336',
-//     color: 'white',
-//     border: 'none',
-//     borderRadius: '5px',
-//     cursor: 'pointer',
-//   },
-// };
 
 export default MyCalendar;

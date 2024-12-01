@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 const EventForm = ({ selectedDate, onClose, onAddEvent, eventToEdit, onUpdateEvent }) => {
   const [eventTitle, setEventTitle] = useState('');
-//   const [eventColor, setEventColor] = useState('#000000'); // Default black color
+  const [eventColor, setEventColor] = useState('#000000'); // Default black color
 
-//   useEffect(() => {
-//     if (eventToEdit) {
-//       setEventTitle(eventToEdit.title);
-//       setEventColor(eventToEdit.color || '#000000');
-//     } else {
-//       setEventTitle('');
-//       setEventColor('#000000');
-//     }
-//   }, [eventToEdit]);
+  useEffect(() => {
+    if (eventToEdit) {
+      setEventTitle(eventToEdit.title);
+      setEventColor(eventToEdit.color || '#000000');
+    } else {
+      setEventTitle('');
+      setEventColor('#000000');
+    }
+  }, [eventToEdit]);
 
   const handleSubmit = () => {
     if (!eventTitle.trim()) {
@@ -20,16 +20,16 @@ const EventForm = ({ selectedDate, onClose, onAddEvent, eventToEdit, onUpdateEve
       return;
     }
 
-    // const eventData = { title: eventTitle, color: eventColor };
+    const eventData = { title: eventTitle, color: eventColor };
 
     if (eventToEdit) {
-      onUpdateEvent(eventToEdit.id, eventTitle);
+      onUpdateEvent(eventToEdit.id, eventData);
     } else {
-      onAddEvent(eventTitle);
+      onAddEvent(eventData);
     }
 
     setEventTitle('');
-    // setEventColor('#000000');
+    setEventColor('#000000');
     onClose();
   };
 
@@ -49,14 +49,15 @@ const EventForm = ({ selectedDate, onClose, onAddEvent, eventToEdit, onUpdateEve
             />
           </label>
           <br />
-          {/* <label>
+          <label>
             Event Color:
             <input
               type="color"
               value={eventColor}
               onChange={(e) => setEventColor(e.target.value)}
             />
-          </label> */}
+          </label>
+          <br />
           <br />
           <button type="button" onClick={handleSubmit}>
             {eventToEdit ? 'Update Event' : 'Add Event'}
