@@ -1,0 +1,23 @@
+.react-calendar {
+    width: 700px !important;
+    margin: auto;
+    line-height: 1.5em
+  }
+  
+  label {
+    display: flex
+  }
+  
+  .text-input, .color-input, .hour-select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .color-input {
+    height: 50px
+  }

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import Button from "@mui/material/Button";
 
 const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
   const dateKey = date.toDateString();
@@ -37,14 +38,20 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
                     type="text"
                     value={editedEvent.title}
                     onChange={(e) =>
-                      setEditedEvent((prev) => ({ ...prev, title: e.target.value }))
+                      setEditedEvent((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
                     }
                   />
                   <input
                     type="color"
                     value={editedEvent.color}
                     onChange={(e) =>
-                      setEditedEvent((prev) => ({ ...prev, color: e.target.value }))
+                      setEditedEvent((prev) => ({
+                        ...prev,
+                        color: e.target.value,
+                      }))
                     }
                   />
                   <select
@@ -62,14 +69,23 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
                       </option>
                     ))}
                   </select>
-                  <button onClick={handleSave}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <Button variant="contained" size="small" onClick={handleSave}>
+                    Save
+                  </Button>
+                  <Button variant="outlined" size="small" onClick={handleCancel}>
+                    Cancel
+                  </Button>
                 </div>
               ) : (
-                <div key={event.id} style={{ ...styles.event, backgroundColor: event.color }}>
+                <div
+                  key={event.id}
+                  style={{ ...styles.event, backgroundColor: event.color }}
+                >
                   {event.title}
                   <button onClick={() => handleEdit(event)}>Edit</button>
-                  <button onClick={() => onDeleteEvent(event.id)}>Delete</button>
+                  <button onClick={() => onDeleteEvent(event.id)}>
+                    Delete
+                  </button>
                 </div>
               )
             )}
@@ -89,40 +105,40 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
 
 const styles = {
   container: {
-    margin: '20px',
-    padding: '10px',
-    textAlign: 'left',
+    margin: "20px",
+    padding: "10px",
+    textAlign: "left",
   },
   timeline: {
-    display: 'flex',
-    flexDirection: 'column',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid #ddd",
+    borderRadius: "5px",
   },
   timeSlot: {
-    display: 'flex',
-    padding: '5px',
-    borderBottom: '1px solid #eee',
+    display: "flex",
+    padding: "5px",
+    borderBottom: "1px solid #eee",
   },
   hourLabel: {
-    width: '60px',
-    fontWeight: 'bold',
+    width: "60px",
+    fontWeight: "bold",
   },
   events: {
     flex: 1,
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '5px',
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "5px",
   },
   event: {
-    padding: '5px',
-    borderRadius: '3px',
-    color: '#fff',
-    position: 'relative',
+    padding: "5px",
+    borderRadius: "3px",
+    color: "#fff",
+    position: "relative",
   },
   editEventContainer: {
-    display: 'flex',
-    gap: '5px',
+    display: "flex",
+    gap: "5px",
   },
 };
 
