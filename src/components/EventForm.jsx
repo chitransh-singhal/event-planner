@@ -3,14 +3,17 @@ import React, { useState, useEffect } from 'react';
 const EventForm = ({ selectedDate, onClose, onAddEvent, eventToEdit, onUpdateEvent }) => {
   const [eventTitle, setEventTitle] = useState('');
   const [eventColor, setEventColor] = useState('#000000'); // Default black color
+  const [eventHour, setEventHour] = useState(0);
 
   useEffect(() => {
     if (eventToEdit) {
       setEventTitle(eventToEdit.title);
       setEventColor(eventToEdit.color || '#000000');
+      setEventHour(eventToEdit.hour);
     } else {
       setEventTitle('');
       setEventColor('#000000');
+      setEventHour(0);
     }
   }, [eventToEdit]);
 
@@ -20,7 +23,7 @@ const EventForm = ({ selectedDate, onClose, onAddEvent, eventToEdit, onUpdateEve
       return;
     }
 
-    const eventData = { title: eventTitle, color: eventColor };
+    const eventData = { title: eventTitle, color: eventColor, hour: eventHour };
 
     if (eventToEdit) {
       onUpdateEvent(eventToEdit.id, eventData);
@@ -57,6 +60,16 @@ const EventForm = ({ selectedDate, onClose, onAddEvent, eventToEdit, onUpdateEve
               onChange={(e) => setEventColor(e.target.value)}
             />
           </label>
+          <br />
+          <br />
+          <label>Hour:</label>
+          <select value={eventHour} onChange={(e) => setEventHour(parseInt(e.target.value))}>
+            {Array.from({ length: 24 }, (_, i) => (
+              <option key={i} value={i}>
+                {`${i}:00`}
+              </option>
+            ))}
+          </select>
           <br />
           <br />
           <button type="button" onClick={handleSubmit}>

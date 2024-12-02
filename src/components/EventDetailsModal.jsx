@@ -23,6 +23,9 @@ const EventDetailsModal = ({ event, onClose, onEdit, onDelete }) => {
             }}
           ></span>
         </p>
+        <p>
+          <strong>Hour:</strong> {`${event.hour}:00`}
+        </p>
         <button onClick={onEdit} style={buttonStyles.edit}>
           Edit
         </button>
