@@ -130,7 +130,7 @@ const MyCalendar = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>React Calendar with Day & Week View</h1>
+      <h1>Event Planner Timeline Application</h1>
       <div style={{ marginBottom: "20px" }}>
         <button onClick={() => setViewMode("month")} style={buttonStyles.view}>
           Month View
