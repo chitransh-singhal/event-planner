@@ -1,11 +1,13 @@
 import React from "react";
 import MyCalendar from "./components/MyCalendar";
+import { EventContextProvider } from "./components/ContextProvider";
 
 const App = () => {
-
   return (
     <div>
-      < MyCalendar />
+      <EventContextProvider>
+        <MyCalendar />
+      </EventContextProvider>
     </div>
   );
 };

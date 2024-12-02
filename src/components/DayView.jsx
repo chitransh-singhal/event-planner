@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
+import { EventContext } from "./ContextProvider";
 
-const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
-  const dateKey = date.toDateString();
-  const dayEvents = events[dateKey] || [];
+const DayView = ({ onDeleteEvent }) => {
+  const { events, updateEvent, selectedDate } = useContext(EventContext);
+
+  const dateKey = selectedDate.toDateString();
   const [editingEventId, setEditingEventId] = useState(null);
   const [editedEvent, setEditedEvent] = useState(null);
+  const dayEvents = events[dateKey] || [];
 
   const handleEdit = (event) => {
     setEditingEventId(event.id);
@@ -13,7 +16,7 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
   };
 
   const handleSave = () => {
-    onUpdateEvent(editingEventId, editedEvent);
+    updateEvent(editingEventId, editedEvent);
     setEditingEventId(null);
     setEditedEvent(null);
   };
@@ -72,7 +75,11 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
                   <Button variant="contained" size="small" onClick={handleSave}>
                     Save
                   </Button>
-                  <Button variant="outlined" size="small" onClick={handleCancel}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={handleCancel}
+                  >
                     Cancel
                   </Button>
                 </div>
@@ -82,8 +89,16 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
                   style={{ ...styles.event, backgroundColor: event.color }}
                 >
                   {event.title}
-                  <button onClick={() => handleEdit(event)}>Edit</button>
-                  <button onClick={() => onDeleteEvent(event.id)}>
+                  <button
+                    onClick={() => handleEdit(event)}
+                    style={{ marginLeft: "4px" }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDeleteEvent(event.id)}
+                    style={{ marginLeft: "4px" }}
+                  >
                     Delete
                   </button>
                 </div>
@@ -97,7 +112,7 @@ const DayView = ({ date, events, onUpdateEvent, onDeleteEvent }) => {
 
   return (
     <div style={styles.container}>
-      <h2>Day View: {date.toDateString()}</h2>
+      <h2>Day View: {selectedDate.toDateString()}</h2>
       <div style={styles.timeline}>{renderTimeline()}</div>
     </div>
   );

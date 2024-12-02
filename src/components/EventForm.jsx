@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
 
 import "./styles.css";
+import { EventContext } from "./ContextProvider";
 
-const EventForm = ({
-  selectedDate,
-  onClose,
-  onAddEvent,
-  eventToEdit,
-  onUpdateEvent,
-}) => {
+const EventForm = ({ onClose, eventToEdit }) => {
+  const { addEvent, updateEvent, selectedDate } = useContext(EventContext);
+
   const [eventTitle, setEventTitle] = useState("");
   const [eventColor, setEventColor] = useState("#000000"); // Default black color
   const [eventHour, setEventHour] = useState(0);
@@ -35,9 +32,9 @@ const EventForm = ({
     const eventData = { title: eventTitle, color: eventColor, hour: eventHour };
 
     if (eventToEdit) {
-      onUpdateEvent(eventToEdit.id, eventData);
+      updateEvent(eventToEdit.id, eventData);
     } else {
-      onAddEvent(eventData);
+      addEvent(eventData);
     }
 
     setEventTitle("");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import EventForm from "./EventForm";
@@ -6,16 +6,14 @@ import EventDetailsModal from "./EventDetailsModal";
 import DayView from "./DayView";
 import WeekView from "./WeekView";
 import Chip from "@mui/material/Chip";
+import { EventContext } from "./ContextProvider";
 
 import "./styles.css";
 
 const MyCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { events, setSelectedDate, selectedDate, setEvents } = useContext(EventContext);
+
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [events, setEvents] = useState(() => {
-    const savedEvents = localStorage.getItem("events");
-    return savedEvents ? JSON.parse(savedEvents) : {};
-  });
   const [eventToEdit, setEventToEdit] = useState(null);
   const [eventToView, setEventToView] = useState(null);
   const [viewMode, setViewMode] = useState("month"); // 'month', 'day', 'week'
@@ -34,37 +32,6 @@ const MyCalendar = () => {
     setEventToEdit(null);
   };
 
-  const addEvent = (eventData) => {
-    const dateKey = selectedDate.toDateString();
-    const newEvent = {
-      id: Date.now(),
-      title: eventData.title,
-      color: eventData.color,
-      hour: eventData.hour,
-    };
-    setEvents((prevEvents) => ({
-      ...prevEvents,
-      [dateKey]: [...(prevEvents[dateKey] || []), newEvent],
-    }));
-  };
-
-  const updateEvent = (eventId, eventData) => {
-    const dateKey = selectedDate.toDateString();
-    setEvents((prevEvents) => ({
-      ...prevEvents,
-      [dateKey]: prevEvents[dateKey].map((event) =>
-        event.id === eventId
-          ? {
-              ...event,
-              title: eventData.title,
-              color: eventData.color,
-              hour: eventData.hour,
-            }
-          : event
-      ),
-    }));
-  };
-
   const deleteEvent = (eventId) => {
     const dateKey = selectedDate.toDateString();
     setEvents((prevEvents) => ({
@@ -75,7 +42,6 @@ const MyCalendar = () => {
   };
 
   const handleEventClick = (event) => {
-    console.log("Inside event click");
     setIsPopupVisible(false);
     setEventToView(event);
   };
@@ -108,29 +74,15 @@ const MyCalendar = () => {
         <Calendar onClickDay={handleDayClick} tileContent={renderTileContent} />
       );
     } else if (viewMode === "day") {
-      return (
-        <DayView
-          date={selectedDate}
-          events={events}
-          onUpdateEvent={updateEvent}
-          onDeleteEvent={deleteEvent}
-        />
-      );
+      return <DayView onDeleteEvent={deleteEvent} />;
     } else if (viewMode === "week") {
-      return (
-        <WeekView
-          date={selectedDate}
-          events={events}
-          onUpdateEvent={updateEvent}
-          onDeleteEvent={deleteEvent}
-        />
-      );
+      return <WeekView onDeleteEvent={deleteEvent} />;
     }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Event Planner Timeline Application</h1>
+      <h1>React Calendar with Day & Week View</h1>
       <div style={{ marginBottom: "20px" }}>
         <button onClick={() => setViewMode("month")} style={buttonStyles.view}>
           Month View
@@ -144,13 +96,7 @@ const MyCalendar = () => {
       </div>
       {renderView()}
       {isPopupVisible && (
-        <EventForm
-          selectedDate={selectedDate}
-          onClose={closePopup}
-          onAddEvent={addEvent}
-          eventToEdit={eventToEdit}
-          onUpdateEvent={updateEvent}
-        />
+        <EventForm onClose={closePopup} eventToEdit={eventToEdit} />
       )}
       {eventToView && (
         <EventDetailsModal
